@@ -1,6 +1,5 @@
 # My First Flask App
-## For Applications of Software Architecture for Big Data class
-
+For Applications of Software Architecture for Big Data class
 
 ### How to run
 `flask run`
