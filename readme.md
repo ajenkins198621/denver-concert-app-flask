@@ -11,6 +11,7 @@ For Applications of Software Architecture for Big Data class
 `python -m unittest discover -s tests/integration -p '*_test.py'`
 
 ### Useful Links
-[Python Virtualenv Mac](https://gist.github.com/pandafulmanda/730a9355e088a9970b18275cb9eadef3)
-[Flask](https://flask.palletsprojects.com/en/2.3.x/)
-[Flask Testing](https://flask.palletsprojects.com/en/3.0.x/testing/)
+- [Python Virtualenv Mac](https://gist.github.com/pandafulmanda/730a9355e088a9970b18275cb9eadef3)
+- [Flask](https://flask.palletsprojects.com/en/2.3.x/)
+- [Flask Testing](https://flask.palletsprojects.com/en/3.0.x/testing/)
+- [Python Github Actions Setup](https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python)
