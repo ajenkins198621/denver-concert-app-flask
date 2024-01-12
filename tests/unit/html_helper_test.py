@@ -2,7 +2,7 @@
 Unit tests for the htmlhelper.py web application
 """
 import unittest
-from htmlhelper import HtmlHelper
+from applications.web.htmlhelper import HtmlHelper
 
 
 class TestHtmlHelper(unittest.TestCase):

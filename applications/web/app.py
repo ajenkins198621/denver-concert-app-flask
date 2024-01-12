@@ -4,7 +4,7 @@ Basic entry into the Denver Concerts web application
 """
 
 from flask import Flask, request
-from htmlhelper import HtmlHelper
+from applications.web.htmlhelper import HtmlHelper
 
 app = Flask(__name__)
 htmlHelper = HtmlHelper()
@@ -27,7 +27,7 @@ def echo_unput() -> str:
     """ Route: After User Input """
     input_text = request.form.get("user_feeling", "")
     if not input_text:
-        input_text = "Nothing :-("
+        input_text = "Nothing 😢"
     return htmlHelper.get_header(title='Response') + f'''
         <p style="font-size: 18px; margin-bottom: 16px; font-family: sans-serif; text-align: center; color: #666;">
             🔊 You said:
