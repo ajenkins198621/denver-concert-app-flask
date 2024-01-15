@@ -2,17 +2,38 @@
 """
 Basic entry into the Denver Concerts web application
 """
-
+import os
 from flask import Flask, request
+from dotenv import load_dotenv
 from applications.web.htmlhelper import HtmlHelper
+from applications.data_collection.app import get_concerts
+from db.db import db
 
+# Setup APP & DB
+load_dotenv()
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLITE_DATABASE_URI')
+db.init_app(app)
+with app.app_context():
+    db.create_all()  # Create tables
+
 htmlHelper = HtmlHelper()
+
+
+# TODO REMOVE THIS - JUST FOR TESTING
+@app.route("/get-concerts")
+def display_concerts() -> str:
+    '''
+    Get and display the concerts
+    '''
+    return get_concerts()
 
 
 @app.route("/")
 def main() -> str:
-    """ Route: Web Application Homepage """
+    '''
+    Route: Web Application Homepage
+    '''
     return htmlHelper.get_header(title='User Input') + '''
     <form action="/display-user-input" method="POST" style="display: flex; flex-direction: column; margin-block-end: 0;">
         <label for="user_feeling" style="font-size: 24px; margin-bottom: 16px; font-family: sans-serif;">👋 How are you feeling today?</label>
@@ -24,7 +45,9 @@ def main() -> str:
 
 @app.route("/display-user-input", methods=["POST"])
 def echo_unput() -> str:
-    """ Route: After User Input """
+    '''
+    Route: After User Input
+    '''
     input_text = request.form.get("user_feeling", "")
     if not input_text:
         input_text = "Nothing 😢"
@@ -40,3 +63,7 @@ def echo_unput() -> str:
         </p>
         <p style="text-align: center;"><a href="/">Try Again</a>
     ''' + htmlHelper.get_footer()
+
+
+if __name__ == '__main__':
+    app.run()
