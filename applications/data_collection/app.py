@@ -108,9 +108,5 @@ def insert_raw_concert_data(json_dict: dict) -> bool:
     return True
 
 
-# '''
-# In main we first get the current temperature and then
-# create a new object that we can add to the database.
-# '''
 if __name__ == "__main__":
     get_concerts()

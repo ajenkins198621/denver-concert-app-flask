@@ -37,8 +37,14 @@ class DataCollectionTest(unittest.TestCase):
             "SQLALCHEMY_DATABASE_URI": 'sqlite:///:memory:',
             "TESTING": True
         })
-        with app.app_context():
-            db.create_all()
+        self.app_context = app.app_context()
+        self.app_context.push()
+        db.create_all()
+
+    def tearDown(self):
+        db.session.remove()
+        db.drop_all()
+        self.app_context.pop()
 
     def test_get_concerts_around_denver(self):
         '''
