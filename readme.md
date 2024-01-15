@@ -14,9 +14,19 @@ We are using Github Actions to run our unit and integration tests on every push 
 
 See .github/workflows/main.yml for more information.
 
+### Data Collection (Ticketmaster Discovery API)
+- [Ticketmaster Discovery API](https://developer.ticketmaster.com/products-and-docs/apis/discovery-api/v2/)
+
+You'll need to register and get an API key and add it to your environment variables.  Both in the application as well as in Heroku or your deployment environment.
+
+
 ## Using the Application
 ### How to run locally
 `flask --app applications.web.app run`
+
+### Troubleshooting
+#### If you get an error about the app not being found, try:
+chrome://net-internals/#sockets -> Flush socket pools
 
 ### Testing
 #### To run the unit tests, run:
