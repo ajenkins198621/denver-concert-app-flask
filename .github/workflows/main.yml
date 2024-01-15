@@ -33,6 +33,7 @@ jobs:
   # Continuous Deployment
   # https://github.com/marketplace/actions/deploy-to-heroku
   build:
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
