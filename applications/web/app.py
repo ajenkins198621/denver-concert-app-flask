@@ -13,7 +13,7 @@ from db.db import db
 # Setup APP & DB
 load_dotenv()
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLITE_DATABASE_URI')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['SQLITE_DATABASE_URI']
 db.init_app(app)
 with app.app_context():
     # TODO - REMOVE THIS - JUST FOR TESTING (shouldn't drop all)

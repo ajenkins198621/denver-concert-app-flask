@@ -16,7 +16,7 @@ from db.models import ConcertRaw
 # Setup APP & DB
 load_dotenv()
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLITE_DATABASE_URI')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['SQLITE_DATABASE_URI']
 db.init_app(app)
 with app.app_context():
     db.drop_all()  # Because this is a small dataset, we'll drop all tables, but in the future we'd want to keep these
@@ -36,7 +36,7 @@ def get_concerts_around_denver(current_month: int = 0, override_url: str = "") -
     end_date = start_date + timedelta(days=31)
 
     params = {
-        "apikey": os.getenv("TICKETMASTER_DISCOVERY_API_KEY"),
+        "apikey": os.environ["TICKETMASTER_DISCOVERY_API_KEY"],
         # "keyword": "concert",
         "radius": "25",
         "unit": "miles",
