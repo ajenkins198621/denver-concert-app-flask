@@ -2,26 +2,12 @@
 """
 Basic entry into the Denver Concerts web application
 """
-import os
-from flask import Flask, request
-from dotenv import load_dotenv
-from sqlalchemy import inspect
+from flask import request
 
 from applications.web.htmlhelper import HtmlHelper
-from db.db import db
+from create_app import create_app
 
-# Setup APP & DB
-load_dotenv()
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['SQLITE_DATABASE_URI']
-db.init_app(app)
-db.init_app(app)
-with app.app_context():
-    inspector = inspect(db.engine)
-    tables_exist = inspector.get_table_names()
-    if not tables_exist:
-        db.create_all()
-
+app = create_app()
 htmlHelper = HtmlHelper()
 
 

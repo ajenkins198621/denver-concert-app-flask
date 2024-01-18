@@ -3,22 +3,14 @@
 Analyzes and stores data from the Ticketmaster Discovery API
 '''
 
-import os
-from datetime import datetime, timedelta
+from datetime import datetime
 
-from flask import Flask
-from dotenv import load_dotenv
+from create_app import create_app
+
 from db.db import db
 from db.models import ConcertRaw, Artist, Venue, Concert, ConcertArtist
 
-
-# Setup APP & DB
-load_dotenv()
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['SQLITE_DATABASE_URI']
-db.init_app(app)
-# with app.app_context():
-# db.create_all()  # Create tables
+app = create_app()
 
 
 def store_concerts_from_raw_data() -> str:
@@ -216,4 +208,6 @@ def store_venue(venue: dict) -> int:
 
 
 if __name__ == "__main__":
-    store_concerts_from_raw_data()
+    # Use app context for database operations
+    with app.app_context():
+        store_concerts_from_raw_data()

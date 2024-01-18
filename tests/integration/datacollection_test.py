@@ -1,13 +1,12 @@
 '''
 Integration tests for data collection app
 '''
-
+import json
 import unittest
-import os
+from unittest.mock import patch
+
 from applications.data_collection.app import app, db, get_concerts_around_denver
 from db.models import ConcertRaw
-from unittest.mock import patch
-import json
 
 
 test_response = {
