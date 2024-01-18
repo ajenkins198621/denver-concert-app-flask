@@ -17,6 +17,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['SQLITE_DATABASE_URI']
 db.init_app(app)
 with app.app_context():
     # TODO - REMOVE THIS - JUST FOR TESTING (shouldn't drop all)
+    db.drop_all()  # Because this is a small dataset, we'll drop all tables, but in the future we'd want to keep these
     db.create_all()  # Create tables
 
 htmlHelper = HtmlHelper()
