@@ -3,12 +3,13 @@
 Gets concert data from the API and stores it in the database
 '''
 
-import requests
-import json
 from datetime import datetime, timedelta
+import json
+import os
+import requests
 from flask import Flask
 from dotenv import load_dotenv
-import os
+from sqlalchemy import inspect
 
 from db.db import db
 from db.models import ConcertRaw
@@ -19,8 +20,10 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['SQLITE_DATABASE_URI']
 db.init_app(app)
 with app.app_context():
-    # db.drop_all()  # Because this is a small dataset, we'll drop all tables, but in the future we'd want to keep these
-    # db.create_all()  # Create tables
+    inspector = inspect(db.engine)
+    tables_exist = inspector.get_table_names()
+    if not tables_exist:
+        db.create_all()
 
 
 base_api_url = "https://app.ticketmaster.com/discovery/v2/events.json"

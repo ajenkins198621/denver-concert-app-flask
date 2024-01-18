@@ -5,9 +5,9 @@ Basic entry into the Denver Concerts web application
 import os
 from flask import Flask, request
 from dotenv import load_dotenv
+from sqlalchemy import inspect
+
 from applications.web.htmlhelper import HtmlHelper
-from applications.data_collection.app import get_concerts
-from applications.data_analyzer.app import store_concerts_from_raw_data
 from db.db import db
 
 # Setup APP & DB
@@ -15,22 +15,14 @@ load_dotenv()
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['SQLITE_DATABASE_URI']
 db.init_app(app)
+db.init_app(app)
 with app.app_context():
-    # TODO - REMOVE THIS - JUST FOR TESTING (shouldn't drop all)
-    db.drop_all()  # Because this is a small dataset, we'll drop all tables, but in the future we'd want to keep these
-    db.create_all()  # Create tables
+    inspector = inspect(db.engine)
+    tables_exist = inspector.get_table_names()
+    if not tables_exist:
+        db.create_all()
 
 htmlHelper = HtmlHelper()
-
-
-# TODO REMOVE THIS - JUST FOR TESTING
-@app.route("/get-concerts")
-def display_concerts() -> str:
-    '''
-    Get and display the concerts
-    '''
-    get_concerts()
-    return store_concerts_from_raw_data()
 
 
 @app.route("/")
