@@ -7,6 +7,7 @@ from flask import Flask, request
 from dotenv import load_dotenv
 from applications.web.htmlhelper import HtmlHelper
 from applications.data_collection.app import get_concerts
+from applications.data_analyzer.app import store_concerts_from_raw_data
 from db.db import db
 
 # Setup APP & DB
@@ -15,6 +16,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLITE_DATABASE_URI')
 db.init_app(app)
 with app.app_context():
+    # TODO - REMOVE THIS - JUST FOR TESTING (shouldn't drop all)
     db.create_all()  # Create tables
 
 htmlHelper = HtmlHelper()
@@ -26,7 +28,8 @@ def display_concerts() -> str:
     '''
     Get and display the concerts
     '''
-    return get_concerts()
+    get_concerts()
+    return store_concerts_from_raw_data()
 
 
 @app.route("/")
