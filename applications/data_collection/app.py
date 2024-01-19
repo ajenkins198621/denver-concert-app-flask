@@ -82,6 +82,7 @@ def get_concerts() -> str:
                         current_month=i, override_url=next_url)
                     insert_raw_concert_data(concerts)
 
+    print(f"Imported {concert_count} concerts' raw data")
     return f"Imported {concert_count} concerts' raw data"
 
 
