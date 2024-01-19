@@ -25,10 +25,10 @@ You'll need to register and get an API key and add it to your environment variab
 `flask --app applications.web.app run`
 
 ### Running the data collector
-`python -m applications.data_collection.app`
+`python applications/data_collection/app.py`
 
 ### Running the data analyzer
-`python -m applications.data_analyzer.app`
+`python applications/data_analyzer/app.py`
 
 ### Troubleshooting
 #### If you get an error about the app not being found, try:
