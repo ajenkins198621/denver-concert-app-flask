@@ -1,3 +1,3 @@
 web: gunicorn applications.web.app:app
-collect: gunicorn applications.data_collection.app:app
-analyze: gunicorn applications.data_analyzer.app:app
+collect: python applications.data_collection.app:app
+analyze: python applications.data_analyzer.app:app

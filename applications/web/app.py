@@ -5,7 +5,7 @@ Basic entry into the Denver Concerts web application
 from flask import request
 
 from applications.web.htmlhelper import HtmlHelper
-from create_app import create_app
+from applications.create_app import create_app
 
 app = create_app()
 htmlHelper = HtmlHelper()

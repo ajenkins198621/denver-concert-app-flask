@@ -8,7 +8,7 @@ import json
 import os
 import requests
 
-from create_app import create_app
+from applications.create_app import create_app
 from db.db import db
 from db.models import ConcertRaw
 
