@@ -3,10 +3,9 @@
 Analyzes and stores data from the Ticketmaster Discovery API
 '''
 
+import logging
 from datetime import datetime
-
 from applications.create_app import create_app
-
 from db.db import db
 from db.models import ConcertRaw, Artist, Venue, Concert, ConcertArtist
 
@@ -40,6 +39,7 @@ def store_concerts_from_raw_data() -> str:
         db.session.delete(raw_result)
 
     db.session.commit()
+    logging.info(f"Stored %s concerts", num_concerts_inserted)
     return f"Stored {num_concerts_inserted} concerts"
 
 

@@ -5,6 +5,7 @@ Gets concert data from the API and stores it in the database
 
 from datetime import datetime, timedelta
 import json
+import logging
 import os
 import requests
 
@@ -82,6 +83,7 @@ def get_concerts() -> str:
                         current_month=i, override_url=next_url)
                     insert_raw_concert_data(concerts)
 
+    logging.info("Imported %s concerts", concert_count)
     print(f"Imported {concert_count} concerts' raw data")
     return f"Imported {concert_count} concerts' raw data"
 
