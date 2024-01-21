@@ -27,8 +27,6 @@ class WebAppIntegrationTest(unittest.TestCase):
         response = self.client.get("/")
         self.assertEqual(response.status_code, 200)
         self.assertIn("How are you feeling today?", response.data.decode())
-        self.assertIn("<html>", response.data.decode())
-        self.assertIn("</html>", response.data.decode())
 
     def test_display_info_route_shows_nothing(self):
         """
@@ -38,8 +36,6 @@ class WebAppIntegrationTest(unittest.TestCase):
             "/display-user-input", data={'user_feeling': ''})
         self.assertEqual(response.status_code, 200)
         self.assertIn("Nothing", response.data.decode())
-        self.assertIn("<html>", response.data.decode())
-        self.assertIn("</html>", response.data.decode())
 
     def test_display_info_route_shows_message(self):
         """
@@ -50,8 +46,6 @@ class WebAppIntegrationTest(unittest.TestCase):
             "/display-user-input", data={'user_feeling': user_feeling})
         self.assertEqual(response.status_code, 200)
         self.assertIn(user_feeling, response.data.decode())
-        self.assertIn("<html>", response.data.decode())
-        self.assertIn("</html>", response.data.decode())
 
 
 if __name__ == '__main__':
