@@ -9,12 +9,13 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-def create_app(config_name='default', template_dir='applications/web/templates'):
+def create_app(config_name='default', template_dir='applications/web/templates', static_dir='applications/web/static'):
     '''
     Creates the app
     '''
 
-    app = Flask(__name__, template_folder=os.path.abspath(template_dir))
+    app = Flask(__name__, template_folder=os.path.abspath(
+        template_dir), static_folder=os.path.abspath(static_dir))
 
     if config_name == 'testing':
         app.config['TESTING'] = True
