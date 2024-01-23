@@ -1,6 +1,7 @@
 '''
 Unit tests for database models
 '''
+from datetime import datetime, timedelta
 import unittest
 from applications.create_app import create_app, db
 from db.models import ConcertRaw, ConcertArtist, Concert, Artist, Venue
@@ -57,10 +58,28 @@ class TestDatabaseModels(unittest.TestCase):
         self.assertIsNone(decoded)
 
     def test_artist_to_dict(self):
-        artist = Artist(name="ABC", spotify_url="http://def.com")
+        artist = Artist(ticketmaster_id="abc123", name="ABC",
+                        spotify_url="http://def.com")
         artist_dict = artist.artist_to_dict()
         self.assertEqual(artist_dict['name'], artist.name)
         self.assertEqual(artist_dict['spotify_url'], artist.spotify_url)
+
+    def test_model_relationships(self):
+        venue = Venue(ticketmaster_id="abc123", name="Bluebird Theater")
+        artist = Artist(ticketmaster_id="abc123", name="asdsfasdf")
+        concert = Concert(ticketmaster_id="abc123",
+                          name="dssagasd", venue=venue, image_url="http://asdf.com", date=datetime.now() + timedelta(days=31 * 1))
+        concert_artist = ConcertArtist(concert=concert, artist=artist)
+
+        # Adding to DB session for relationship testing
+        db.session.add(venue)
+        db.session.add(artist)
+        db.session.add(concert)
+        db.session.add(concert_artist)
+        db.session.commit()
+
+        self.assertIn(concert_artist, concert.concert_artists)
+        self.assertIn(concert_artist, artist.artist_concerts)
 
 
 if __name__ == '__main__':

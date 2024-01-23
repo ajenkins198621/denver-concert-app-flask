@@ -26,26 +26,7 @@ class WebAppIntegrationTest(unittest.TestCase):
         """
         response = self.client.get("/")
         self.assertEqual(response.status_code, 200)
-        self.assertIn("How are you feeling today?", response.data.decode())
-
-    def test_display_info_route_shows_nothing(self):
-        """
-        Tests the route which displays information when no data is provided
-        """
-        response = self.client.post(
-            "/display-user-input", data={'user_feeling': ''})
-        self.assertEqual(response.status_code, 200)
-        self.assertIn("Nothing", response.data.decode())
-
-    def test_display_info_route_shows_message(self):
-        """
-        Tests the route which displays information when no data is provided
-        """
-        user_feeling = "I feel great, thanks!"
-        response = self.client.post(
-            "/display-user-input", data={'user_feeling': user_feeling})
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(user_feeling, response.data.decode())
+        self.assertIn("Loading concerts...", response.data.decode())
 
 
 if __name__ == '__main__':
