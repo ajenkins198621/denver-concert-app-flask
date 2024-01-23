@@ -22,7 +22,7 @@ You'll need to register and get an API key and add it to your environment variab
 
 ## Using the Application
 ### How to run locally
-`flask --app applications.web.app run`
+`flask --app applications.web.app run --debug`
 
 ### Running the data collector
 `python applications/data_collection/app.py`

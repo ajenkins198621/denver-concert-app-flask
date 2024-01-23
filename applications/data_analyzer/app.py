@@ -84,7 +84,21 @@ def store_concert(concert: dict) -> int:
 
     # Create Concert
     if "images" in concert and len(concert["images"]) > 0:
-        concert_image_url = concert['images'][0]['url']
+
+        concert_image_url = ""
+
+        for image in concert["images"]:
+            if image["height"] > 150 and image["height"] < 350 and image["ratio"] == "4_3":
+                concert_image_url = image['url']
+                break
+        if concert_image_url == "":
+            for image in concert["images"]:
+                if image["height"] > 150 and image["height"] < 350 and image["ratio"] == "3_2":
+                    concert_image_url = image['url']
+                    break
+        if concert_image_url == "":
+            concert_image_url = concert['images'][0]['url']
+
     if "dates" in concert:
         if "start" in concert["dates"]:
             if "localDate" in concert["dates"]["start"]:
@@ -189,7 +203,7 @@ def store_venue(venue: dict) -> int:
         ticketmaster_id=venue_ticketmaster_id).first()
     if existing_venue and existing_venue.id:
         print(f"Venue: Duplicate venue: {venue_ticketmaster_id}, {venue_name}")
-        return 0
+        return existing_venue.id
 
     new_venue = Venue(
         ticketmaster_id=venue_ticketmaster_id,
