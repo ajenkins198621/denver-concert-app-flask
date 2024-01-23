@@ -21,7 +21,8 @@ def create_app(config_name='default', template_dir='applications/web/templates',
         app.config['TESTING'] = True
         app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
     else:
-        app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['SQLITE_DATABASE_URI']
+        app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv(
+            'DATABASE_URL', os.getenv('SQLITE_DATABASE_URI'))
 
     db.init_app(app)
     initialize_database(app)
@@ -39,7 +40,5 @@ def initialize_database(app):
         if not tables_exist:
             db.create_all()
         else:
-            tables = [Table(table_name, db.metadata,
-                            autoload=True, autoload_with=db.engine) for table_name in tables_exist]
-            db.drop_all(tables=tables)
+            db.drop_all()
             db.create_all()

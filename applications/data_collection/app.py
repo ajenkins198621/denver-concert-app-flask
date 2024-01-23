@@ -106,5 +106,4 @@ def insert_raw_concert_data(json_dict: dict) -> bool:
 if __name__ == "__main__":
     # Use app context for database operations
     with app.app_context():
-        db.drop_all()
         get_concerts()
