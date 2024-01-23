@@ -2,7 +2,7 @@
 
 import os
 from flask import Flask
-from sqlalchemy import inspect
+from sqlalchemy import inspect, Table
 from db.db import db
 from dotenv import load_dotenv
 
@@ -34,7 +34,8 @@ def initialize_database(app):
     Setup the db
     '''
     with app.app_context():
-        inspector = inspect(db.engine)
-        tables_exist = inspector.get_table_names()
-        if not tables_exist:
+        db.metadata.reflect(db.engine)
+        if 'concert_raw' not in db.metadata.tables:
+            # Create only the 'concert_raw' table
+            Table('concert_raw', db.metadata, autoload_with=db.engine)
             db.create_all()
