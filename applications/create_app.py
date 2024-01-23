@@ -39,6 +39,3 @@ def initialize_database(app):
         tables_exist = inspector.get_table_names()
         if not tables_exist:
             db.create_all()
-        else:
-            db.drop_all()
-            db.create_all()
