@@ -19,23 +19,19 @@ def store_concerts_from_raw_data() -> str:
 
     num_concerts_inserted = 0
 
-    # Get concerts from the database
     raw_results = ConcertRaw.query.all()
 
-    # loop through each result and store the concert
     for raw_result in raw_results:
-
         result = raw_result.decode_raw()
+        if result is not None:
+            if "_embedded" in result:
+                if "events" in result["_embedded"]:
+                    concerts = result["_embedded"]["events"]
+                    for concert in concerts:
+                        num_concerts_inserted += store_concert(concert)
+        else:
+            pass
 
-        if "_embedded" in result:
-            if "events" in result["_embedded"]:
-                concerts = result["_embedded"]["events"]
-                for concert in concerts:
-                    num_concerts_inserted += store_concert(concert)
-
-        # If it has results, process them
-
-        # Delete the record
         db.session.delete(raw_result)
 
     db.session.commit()
