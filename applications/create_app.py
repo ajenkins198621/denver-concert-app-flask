@@ -34,8 +34,12 @@ def initialize_database(app):
     Setup the db
     '''
     with app.app_context():
-        db.metadata.reflect(db.engine)
-        if 'concert_raw' not in db.metadata.tables:
-            # Create only the 'concert_raw' table
-            Table('concert_raw', db.metadata, autoload_with=db.engine)
+        inspector = inspect(db.engine)
+        tables_exist = inspector.get_table_names()
+        if not tables_exist:
+            db.create_all()
+        else:
+            tables = [Table(table_name, db.metadata,
+                            autoload=True, autoload_with=db.engine) for table_name in tables_exist]
+            db.drop_all(tables=tables)
             db.create_all()
