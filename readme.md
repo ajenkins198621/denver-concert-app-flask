@@ -32,7 +32,7 @@ You'll need to register and get an API key and add it to your environment variab
 
 ### Troubleshooting
 #### If you get an error about the app not being found, try:
-chrome://net-internals/#sockets -> Flush socket pools
+[chrome://net-internals/#sockets](chrome://net-internals/#sockets) -> Flush socket pools
 
 ### Testing
 #### To run the unit tests, run:

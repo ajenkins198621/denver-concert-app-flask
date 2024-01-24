@@ -4,12 +4,20 @@ Basic entry into the Denver Concerts web application
 """
 from datetime import datetime, timedelta
 from flask import request, render_template, jsonify
+from prometheus_client import Counter, generate_latest, CONTENT_TYPE_LATEST
 from sqlalchemy.orm import joinedload
 
 from applications.create_app import create_app
 from db.models import Concert, ConcertArtist
 
 app = create_app()
+
+HOMEPAGE_RESULTS = Counter(
+    'homepage_requests', 'Number of requests made to the homepage')
+HEALTH_CHECK_RESULTS = Counter(
+    'health_check_requests', 'Number of requests made to the health check')
+GET_CONCERTS_RESULTS = Counter(
+    'get_concerts_requests', 'Number of requests made to get concerts')
 
 
 @app.route("/")
@@ -21,6 +29,7 @@ def main() -> str:
         "title": "Denver Rock Concerts",
         # "content": form
     }
+    HOMEPAGE_RESULTS.inc()
     return render_template('index.html', data=data)
 
 
@@ -29,6 +38,7 @@ def health_check() -> str:
     '''
     Route: Health Check
     '''
+    HEALTH_CHECK_RESULTS.inc()
     return "I'm Healthy!"
 
 
@@ -59,12 +69,18 @@ def get_concerts_json():
     concerts_data = [concert.concert_to_dict(include_artists=True, include_venue=True)
                      for concert in concerts]
     grouped_concerts = group_concerts(concerts_data)
+    GET_CONCERTS_RESULTS.inc()
     return jsonify(grouped_concerts)
+
+
+@app.route('/metrics')
+def metrics():
+    return generate_latest(), {'Content-Type': CONTENT_TYPE_LATEST}
 
 
 def group_concerts(concerts) -> dict:
     '''
-    Groups the concerts by date
+    Helper function that groups the concerts by date
     '''
     dates = {}
     for concert in concerts:
