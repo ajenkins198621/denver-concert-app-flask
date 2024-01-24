@@ -68,7 +68,11 @@ def get_concerts() -> str:
             else:
                 continue
 
-        insert_raw_concert_data(concerts)
+        raw_concert_groups = break_up_raw_data(concerts)
+
+        # Loop through each concert piece and insert into database
+        for concert_piece in raw_concert_groups:
+            insert_raw_concert_data(concert_piece)
 
         # Loop through subsequent pages if applicable
         is_complete = False
@@ -81,11 +85,42 @@ def get_concerts() -> str:
                     next_url = concerts["_links"]["next"]["href"]
                     concerts = get_concerts_around_denver(
                         current_month=i, override_url=next_url)
-                    insert_raw_concert_data(concerts)
+                    raw_concert_groups = break_up_raw_data(concerts)
+                    for concert_piece in raw_concert_groups:
+                        insert_raw_concert_data(concert_piece)
 
     logging.info("Imported %s concerts", concert_count)
     print(f"Imported {concert_count} concerts' raw data")
     return f"Imported {concert_count} concerts' raw data"
+
+
+def break_up_raw_data(raw_data: dict) -> list:
+    '''
+    Breaks up the raw data that has many concerts into smaller chunks of 2 concerts
+    '''
+    raw_data_list: list = []
+    if ("_embedded" in raw_data):
+        if ("events" in raw_data["_embedded"]):
+            concerts = raw_data["_embedded"]["events"]
+            i = 0
+            sub_group: dict = {
+                "_embedded": {
+                    "events": []
+                }
+            }
+            for concert in concerts:
+                if i < 2:
+                    sub_group["_embedded"]["events"].append(concert)
+                    i += 1
+                elif i == 2:
+                    raw_data_list.append(sub_group)
+                    sub_group = {
+                        "_embedded": {
+                            "events": []
+                        }
+                    }
+                    i = 0
+    return raw_data_list
 
 
 def insert_raw_concert_data(json_dict: dict) -> bool:

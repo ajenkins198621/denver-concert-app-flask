@@ -27,6 +27,9 @@ class TestDatabaseModels(unittest.TestCase):
         db.drop_all()
 
     def test_concert_to_dict(self):
+        '''
+        Test the concert_to_dict method
+        '''
         venue = Venue(name="Red Rocks", address1="123 Street", city="Denver")
         artist = Artist(name="Band A", spotify_url="spotify.com/123")
         concert = Concert(name="Concert 1", venue=venue)
@@ -58,6 +61,9 @@ class TestDatabaseModels(unittest.TestCase):
         self.assertIsNone(decoded)
 
     def test_artist_to_dict(self):
+        '''
+        Test the artist_to_dict method
+        '''
         artist = Artist(ticketmaster_id="abc123", name="ABC",
                         spotify_url="http://def.com")
         artist_dict = artist.artist_to_dict()
@@ -65,6 +71,9 @@ class TestDatabaseModels(unittest.TestCase):
         self.assertEqual(artist_dict['spotify_url'], artist.spotify_url)
 
     def test_model_relationships(self):
+        '''
+        Tests the model relationships
+        '''
         venue = Venue(ticketmaster_id="abc123", name="Bluebird Theater")
         artist = Artist(ticketmaster_id="abc123", name="asdsfasdf")
         concert = Concert(ticketmaster_id="abc123",
