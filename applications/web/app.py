@@ -24,6 +24,14 @@ def main() -> str:
     return render_template('index.html', data=data)
 
 
+@app.route("/health-check")
+def health_check() -> str:
+    '''
+    Route: Health Check
+    '''
+    return "I'm Healthy!"
+
+
 @app.route("/get-concerts", methods=["GET"])
 def get_concerts_json():
     '''

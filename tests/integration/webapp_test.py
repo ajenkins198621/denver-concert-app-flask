@@ -28,6 +28,14 @@ class WebAppIntegrationTest(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn("Loading concerts...", response.data.decode())
 
+    def test_health_check_route(self):
+        """
+        Tests the health check route
+        """
+        response = self.client.get("/health-check")
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("I'm Healthy!", response.data.decode())
+
 
 if __name__ == '__main__':
     unittest.main()
