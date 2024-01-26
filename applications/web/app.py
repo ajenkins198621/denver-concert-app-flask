@@ -5,10 +5,11 @@ Basic entry into the Denver Concerts web application
 from datetime import datetime, timedelta
 from flask import request, render_template, jsonify
 from prometheus_client import Counter, generate_latest, CONTENT_TYPE_LATEST
+from sqlalchemy import or_
 from sqlalchemy.orm import joinedload
 
 from applications.create_app import create_app
-from db.models import Concert, ConcertArtist
+from db.models import Concert, ConcertArtist, Artist
 
 app = create_app()
 
@@ -59,12 +60,30 @@ def get_concerts_json():
     start_date = current_date + timedelta(days=(page - 1) * 30)
     end_date = start_date + timedelta(days=30)
 
-    concerts = Concert.query.filter(
+    concerts_query = Concert.query.filter(
         Concert.date >= start_date,
         Concert.date < end_date
-    ).options(
+    )
+
+    search_term = request.args.get('search', None)
+    if search_term is not None:
+        sanitized_search_term = "%{}%".format(
+            search_term.strip().replace('%', '\\%').replace('_', '\\_'))
+
+        concerts_query = concerts_query.join(ConcertArtist).join(Artist).filter(
+            or_(
+                Concert.name.ilike(sanitized_search_term),
+                Artist.name.ilike(sanitized_search_term)
+            )
+        )
+
+        print(sanitized_search_term)
+
+    concerts_query = concerts_query.options(
         joinedload(Concert.concert_artists).joinedload(ConcertArtist.artist)
-    ).order_by(Concert.date).all()
+    ).order_by(Concert.date)
+
+    concerts = concerts_query.all()
 
     concerts_data = [concert.concert_to_dict(include_artists=True, include_venue=True)
                      for concert in concerts]

@@ -36,6 +36,33 @@
                 width: 375px;
             }
 
+
+            #search-container input {
+                border: none;
+                border-radius: 15px 0 0 15px;
+                padding: 11px 20px;
+                font-size: 16px;
+            }
+
+            #search-container button {
+                font-size: 16px;
+                border: none;
+                background: none;
+                padding: 0;
+                margin: 0;
+                background: #000;
+                color: white;
+                font-size: 16px;
+                height: 40px;
+                padding: 0 20px;
+                border-radius: 0px 15px 15px 0px;
+                margin-left: -8px;
+            }
+
+            #clear-search {
+                display: none;
+            }
+
             #concerts-list {
                 width: 100%;
             }
@@ -123,6 +150,11 @@
                 {{data.content|safe}}
             </div>
         {% endif %}
+        <form id="search-container">
+            <input type="text" id="search" placeholder="Search for a concert" />
+            <button id="search-button">Search</button>
+            <a href="/" id="clear-search">Clear Search</a>
+        </form>
         <div id="concerts-list"></div>
         <h2 class="loading-text">Loading concerts...</h2>
     </main>
@@ -195,16 +227,14 @@
         let currentPage = 1;
         let isLoading = false;
 
-        const loadConcerts = () => {
-            if (isLoading) return;
-            isLoading = true;
-
-            fetch(`/get-concerts?page=${currentPage}`)
+        const fetchConcerts = (url, callback) => {
+            fetch(url)
                 .then(response => response.json())
                 .then(dates => {
                     if(Object.keys(dates).length === 0) {
                         document.querySelector('.loading-text').textContent = "No more concerts to load";
                         isLoading = true;
+                        if(callback) callback();
                         return;
                     }
                     const parentEl = document.getElementById('concerts-list');
@@ -213,15 +243,39 @@
                     });
                     currentPage++;
                     isLoading = false;
+                    if(callback) callback();
                 }).catch(() => isLoading = false);
+        }
+
+        const loadConcerts = () => {
+            if (isLoading) return;
+            isLoading = true;
+            fetchConcerts(`/get-concerts?page=${currentPage}`);
+        }
+
+        loadConcerts();
+
+        window.onscroll = () => {
+            if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+                loadConcerts();
             }
+        };
 
-            loadConcerts();
+        document.getElementById('search-container').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const searchTerm = document.getElementById('search').value;
+            if (searchTerm) {
+                currentPage = 1;
+                isLoading = true;
+                const concertList = document.getElementById('concerts-list');
+                concertList.innerHTML = '';
+                fetchConcerts(`/get-concerts?search=${searchTerm}&page=${currentPage}`, () => {
+                    document.getElementById('clear-search').style.display = 'inline';
+                    document.querySelector('.loading-text').innerHTML = `Displaying Search Results.`;
 
-            window.onscroll = () => {
-                if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
-                    loadConcerts();
-                }
-            };
+                });
+            }
+        });
+        
     </script>
 </body>
